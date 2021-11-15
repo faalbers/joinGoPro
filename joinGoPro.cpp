@@ -1,4 +1,4 @@
-#include "MP4.cpp"
+#include "MP4.hpp"
 #include <iostream>
 
 int main(int argc, char* argv[])
@@ -8,16 +8,22 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    MP4::MP4 mp4(argv[1]);
-    auto splunk = mp4.splunkGet();
+    MP4::Processor processor;
+
+    MP4::Parser parserMain(argv[1]);
+    processor.addTrack(parserMain,"hvc1",1);
+    processor.addTrack(parserMain,"mp4a",2);
+    processor.addTrack(parserMain,"gpmd",3);
 
     for ( int i = 2; i < (argc - 1); i++) {
-        MP4::MP4 mp4Append(argv[i]);
-        MP4::MP4::splunkAppend(splunk, mp4Append);
+        MP4::Parser parserAppend(argv[i]);
+        processor.append(parserAppend);
     }
 
-    splunk.fileWritePath = argv[argc-1];
-    mp4.splunkCreate(splunk);
+    processor.addUserData(parserMain);
+
+    MP4::Writer writer(processor);
+    writer.write(argv[argc-1]);
 
     return 0;
 }
