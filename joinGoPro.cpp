@@ -11,9 +11,9 @@ int main(int argc, char* argv[])
     MP4::Processor processor;
 
     MP4::Parser parserMain(argv[1]);
-    processor.addTrack(parserMain,"hvc1",1);
-    processor.addTrack(parserMain,"mp4a",2);
-    processor.addTrack(parserMain,"gpmd",3);
+    processor.addComponentSubTypeTrack(parserMain,"vide",1);
+    processor.addComponentSubTypeTrack(parserMain,"soun",2);
+    processor.addDataFormatTrack(parserMain,"gpmd");
 
     for ( int i = 2; i < (argc - 1); i++) {
         MP4::Parser parserAppend(argv[i]);
